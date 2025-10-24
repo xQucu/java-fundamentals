@@ -16,6 +16,7 @@ public class ConsoleIOManager {
 
     public void displayMenu(String prompt, List<String> options) {
         this.clearScreen();
+        System.out.println(prompt);
         for (int i = 0; i < options.size(); i++) {
             String option = options.get(i);
             System.out.println((i + 1) + ": " + option);
@@ -23,7 +24,6 @@ public class ConsoleIOManager {
     }
 
     public void handleInput(List<String> options) {
-        // FIXME: proper handling of incorrect inputs
         int input;
         try {
             input = Integer.parseInt(scanner.next());
@@ -42,7 +42,6 @@ public class ConsoleIOManager {
     }
 
     public void waitForAnyInputToContinue() {
-        // scanner.next();
         try {
             System.in.read();
         } catch (IOException e) {
@@ -51,9 +50,8 @@ public class ConsoleIOManager {
     }
 
     public void clearScreen() {
-        // NOTE: uncomment this
-        // System.out.print("\033[H\033[2J");
-        // System.out.flush();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     public String getChoice() {

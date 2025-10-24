@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -10,10 +11,6 @@ public class MenuController {
     }
 
     public void start(Catalog catalog, UserList userList) {
-        // add item
-        // remove item
-        // show list
-        // quit
 
         Scanner scanner = new Scanner(System.in);
         ConsoleIOManager ConsoleIOManager = new ConsoleIOManager(scanner);
@@ -40,7 +37,23 @@ public class MenuController {
                 }
 
             } else if (this.menuName.equals("Remove product")) {
-
+                List<String> menuItems = new ArrayList<>(userList.getList());
+                if (menuItems.size() > 0) {
+                    menuItems.add(Constants.GO_BACK_OPTION);
+                    ConsoleIOManager.displayMenu(Constants.REMOVE_ITEM_MENU, menuItems);
+                    ConsoleIOManager.handleInput(menuItems);
+                    String choice = ConsoleIOManager.getChoice();
+                    if (choice.equals(Constants.GO_BACK_OPTION)) {
+                        this.menuName = "Main Menu";
+                    } else if (userList.getList().contains(choice)) {
+                        userList.removeProduct(choice);
+                    }
+                } else {
+                    ConsoleIOManager.clearScreen();
+                    ConsoleIOManager.showMessage(Constants.EMPTY_SHOW_LIST_MESSAGE);
+                    ConsoleIOManager.waitForAnyInputToContinue();
+                    this.menuName = "Main Menu";
+                }
             } else if (catalog.getCategories().contains(this.menuName)) {
 
                 List<String> menuItems = new ArrayList<>(catalog.getItemsFromCategory(this.menuName));
@@ -57,9 +70,9 @@ public class MenuController {
 
             } else if (this.menuName.equals("Show list")) {
                 List<String> productsList = userList.getList();
+                ConsoleIOManager.clearScreen();
                 if (productsList.size() > 0) {
-                    ConsoleIOManager.showMessage(Constants.SHOW_LIST_MESSAGE);
-                    ConsoleIOManager.showLines(productsList);
+                    ConsoleIOManager.displayMenu(Constants.SHOW_LIST_MESSAGE, productsList);
                 } else {
                     ConsoleIOManager.showMessage(Constants.EMPTY_SHOW_LIST_MESSAGE);
                 }
@@ -67,14 +80,16 @@ public class MenuController {
                 this.menuName = "Main Menu";
 
             } else if (this.menuName.equals("Save list")) {
-                boolean ok = userList.saveListToFile(Constants.OUTPUT_FILE_NAME);
-                if (ok) {
+                try {
+                    ConsoleIOManager.clearScreen();
+                    userList.saveListToFile(Constants.OUTPUT_FILE_NAME);
                     ConsoleIOManager.showMessage(Constants.SUCESSFULL_LIST_SAVE);
-                } else {
+                } catch (IOException e) {
                     ConsoleIOManager.showMessage(Constants.FAILED_LIST_SAVE);
+                } finally {
+                    ConsoleIOManager.waitForAnyInputToContinue();
+                    this.menuName = "Main Menu";
                 }
-                ConsoleIOManager.waitForAnyInputToContinue();
-                this.menuName = "Main Menu";
 
             } else if (this.menuName.equals("Quit")) {
 

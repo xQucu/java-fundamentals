@@ -17,4 +17,5 @@ public class Constants {
     public static final String EMPTY_SHOW_LIST_MESSAGE = "Looks like there is nothing here yet, press enter to continue";
     public static final String SUCESSFULL_LIST_SAVE = "Your list was sucesfully saved, press enter to continue";
     public static final String FAILED_LIST_SAVE = "Saving your list failed, press enter to continue";
+    public static final String REMOVE_ITEM_MENU = "Select item by entering corresponding number and clicking enter or choose to go back";
 }

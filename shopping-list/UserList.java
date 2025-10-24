@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserList {
-    // NOTE: this could also be also implemented holding quantities of each product
     private List<String> products;
     private FileIOManager fm;
 
@@ -24,12 +23,7 @@ public class UserList {
         this.products.remove(product);
     }
 
-    public boolean saveListToFile(String fileName) {
-        try {
-            this.fm.writeLines(Constants.OUTPUT_FILE_NAME, this.products);
-        } catch (IOException _) {
-            return false;
-        }
-        return true;
+    public void saveListToFile(String fileName) throws IOException {
+        this.fm.writeLines(Constants.OUTPUT_FILE_NAME, this.products);
     }
 }
