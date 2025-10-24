@@ -1,12 +1,15 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserList {
-    // NOTE: this class can be also implemented holding quantities of each product
+    // NOTE: this could also be also implemented holding quantities of each product
     private List<String> products;
+    private FileIOManager fm;
 
-    public UserList() {
+    public UserList(FileIOManager fm) {
         this.products = new ArrayList<>();
+        this.fm = fm;
     }
 
     public void addProduct(String product) {
@@ -21,7 +24,12 @@ public class UserList {
         this.products.remove(product);
     }
 
-    public void saveListToFile(String fileName) {
-        // TODO:saveListToFile with custom name from const
+    public boolean saveListToFile(String fileName) {
+        try {
+            this.fm.writeLines(Constants.OUTPUT_FILE_NAME, this.products);
+        } catch (IOException _) {
+            return false;
+        }
+        return true;
     }
 }

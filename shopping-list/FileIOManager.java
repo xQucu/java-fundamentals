@@ -14,4 +14,10 @@ public class FileIOManager {
 
         return lines;
     }
+
+    public void writeLines(String fileName, List<String> lines) throws IOException {
+        Path filePath = Paths.get(fileName);
+        Files.write(filePath, lines);
+    }
+
 }

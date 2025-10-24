@@ -11,7 +11,7 @@ public class Main {
             System.err.println("Problem with opening the file:" + e.getMessage());
             return;
         }
-        UserList userList = new UserList();
+        UserList userList = new UserList(fm);
         MenuController menuController = new MenuController();
 
         menuController.start(catalog, userList);
