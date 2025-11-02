@@ -50,11 +50,12 @@ public class ConsoleIOManager {
     }
 
     public void clearScreen() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        // System.out.print("\033[H\033[2J");
+        // System.out.flush();
     }
 
     public String getChoice() {
+        System.out.println(this.choosenOption);
         return this.choosenOption;
     }
 
