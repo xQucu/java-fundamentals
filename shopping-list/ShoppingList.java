@@ -9,7 +9,7 @@ public class ShoppingList {
             UserList userList = new UserList(fm);
             MenuController menuController = new MenuController();
 
-            menuController.start(catalog, userList);
+            menuController.init(catalog, userList);
         } catch (IOException e) {
             System.err.println("Problem with opening the file:" + e.getMessage());
         }

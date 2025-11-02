@@ -10,7 +10,7 @@ public class MenuController {
         this.menuName = "Main Menu";
     }
 
-    public void start(Catalog catalog, UserList userList) {
+    public void init(Catalog catalog, UserList userList) {
 
         Scanner scanner = new Scanner(System.in);
         ConsoleIOManager ConsoleIOManager = new ConsoleIOManager(scanner);
