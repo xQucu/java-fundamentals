@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MenuController {
-    private String menuName;
+    private String currentState;
     private boolean running;
 
     public MenuController() {
-        this.menuName = "Main Menu";
+        this.currentState = "Main Menu";
         this.running = true;
     }
 
@@ -19,34 +19,34 @@ public class MenuController {
 
         while (this.running) {
 
-            switch (this.menuName) {
+            switch (this.currentState) {
 
-                case "Main Menu": {
+                case Constants.MAIN_MENU_NAME: {
                     mainMenu(ConsoleIOManager);
                     break;
                 }
 
-                case "Add product": {
+                case Constants.ADD_PRODUCTS_MENU_NAME: {
                     addProductMenu(catalog, ConsoleIOManager);
                     break;
                 }
 
-                case "Remove product": {
+                case Constants.REMOVE_PRODUCTS_MENU_NAME: {
                     removeProductMenu(userList, ConsoleIOManager);
                     break;
                 }
 
-                case "Show list": {
+                case Constants.SHOW_LIST_MENU_NAME: {
                     productListMenu(userList, ConsoleIOManager);
                     break;
                 }
 
-                case "Save list": {
+                case Constants.SAVE_LIST_MENU_NAME: {
                     saveListMenu(userList, ConsoleIOManager);
                     break;
                 }
 
-                case "Quit": {
+                case Constants.QUIT_NAME: {
                     quit(ConsoleIOManager);
                     break;
                 }
@@ -75,7 +75,7 @@ public class MenuController {
             ConsoleIOManager.showMessage(Constants.FAILED_LIST_SAVE);
         } finally {
             ConsoleIOManager.waitForAnyInputToContinue();
-            this.menuName = "Main Menu";
+            this.currentState = Constants.MAIN_MENU_NAME;
         }
     }
 
@@ -88,18 +88,18 @@ public class MenuController {
             ConsoleIOManager.showMessage(Constants.EMPTY_SHOW_LIST_MESSAGE);
         }
         ConsoleIOManager.waitForAnyInputToContinue();
-        this.menuName = "Main Menu";
+        this.currentState = Constants.MAIN_MENU_NAME;
     }
 
     private void categoriesMenu(Catalog catalog, UserList userList, ConsoleIOManager ConsoleIOManager) {
-        List<String> menuItems = new ArrayList<>(catalog.getItemsFromCategory(this.menuName));
+        List<String> menuItems = new ArrayList<>(catalog.getItemsFromCategory(this.currentState));
         menuItems.add(Constants.GO_BACK_OPTION);
         ConsoleIOManager.displayMenu(Constants.ADD_PRODUCT_FINAL_MENU, menuItems);
         ConsoleIOManager.handleInput(menuItems);
         String newMenuName = ConsoleIOManager.getChoice();
         if (newMenuName.equals(Constants.GO_BACK_OPTION)) {
-            this.menuName = "Main Menu";
-        } else if (catalog.getItemsFromCategory(this.menuName).contains(newMenuName)) {
+            this.currentState = Constants.MAIN_MENU_NAME;
+        } else if (catalog.getItemsFromCategory(this.currentState).contains(newMenuName)) {
             userList.addProduct(newMenuName);
             ConsoleIOManager.showDissapearingMessage(Constants.ON_ADD_MESSAGE);
         }
@@ -113,7 +113,7 @@ public class MenuController {
             ConsoleIOManager.handleInput(menuItems);
             String choice = ConsoleIOManager.getChoice();
             if (choice.equals(Constants.GO_BACK_OPTION)) {
-                this.menuName = "Main Menu";
+                this.currentState = Constants.MAIN_MENU_NAME;
             } else if (userList.getList().contains(choice)) {
                 userList.removeProduct(choice);
             }
@@ -121,7 +121,7 @@ public class MenuController {
             ConsoleIOManager.clearScreen();
             ConsoleIOManager.showMessage(Constants.EMPTY_SHOW_LIST_MESSAGE);
             ConsoleIOManager.waitForAnyInputToContinue();
-            this.menuName = "Main Menu";
+            this.currentState = Constants.MAIN_MENU_NAME;
         }
     }
 
@@ -132,16 +132,16 @@ public class MenuController {
         ConsoleIOManager.handleInput(menuItems);
         String newMenuName = ConsoleIOManager.getChoice();
         if (newMenuName.equals(Constants.GO_BACK_OPTION)) {
-            this.menuName = "Main Menu";
+            this.currentState = Constants.MAIN_MENU_NAME;
         } else if (catalog.getCategories().contains(newMenuName)) {
-            this.menuName = newMenuName;
+            this.currentState = newMenuName;
         }
     }
 
     private void mainMenu(ConsoleIOManager ConsoleIOManager) {
-        ConsoleIOManager.displayMenu(Constants.MAIN_MENU_PROMPT, Constants.MAIN_MENU);
-        ConsoleIOManager.handleInput(Constants.MAIN_MENU);
-        this.menuName = ConsoleIOManager.getChoice();
+        ConsoleIOManager.displayMenu(Constants.MAIN_MENU_PROMPT, Constants.MAIN_MENU_OPTIONS);
+        ConsoleIOManager.handleInput(Constants.MAIN_MENU_OPTIONS);
+        this.currentState = ConsoleIOManager.getChoice();
     }
 
 }

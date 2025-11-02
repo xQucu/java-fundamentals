@@ -3,9 +3,14 @@ import java.util.List;
 public class Constants {
     public static final String INPUT_FILE_NAME = "data.txt";
     public static final String MAIN_MENU_PROMPT = "Choose action by entering corresponding number and clicking enter";
-    public static final List<String> MAIN_MENU = List.of("Add product", "Remove product", "Show list", "Save list",
-            "Quit");
-
+    public static final String MAIN_MENU_NAME = "Main Menu";
+    public static final String ADD_PRODUCTS_MENU_NAME = "Add product";
+    public static final String REMOVE_PRODUCTS_MENU_NAME = "Remove product";
+    public static final String SHOW_LIST_MENU_NAME = "Show list";
+    public static final String SAVE_LIST_MENU_NAME = "Save list";
+    public static final String QUIT_NAME = "Quit";
+    public static final List<String> MAIN_MENU_OPTIONS = List.of(ADD_PRODUCTS_MENU_NAME, REMOVE_PRODUCTS_MENU_NAME,
+            SHOW_LIST_MENU_NAME, SAVE_LIST_MENU_NAME, QUIT_NAME);
     public static final String ADD_PRODUCT_CATEGORIES_MENU = "Select category by entering corresponding number and clicking enter or choose to go back";
     public static final String ADD_PRODUCT_FINAL_MENU = "Select item to add by entering corresponding number and clicking enter or choose to go back";
     public static final String GOODBYE_MESSAGE = "Goodbye";
