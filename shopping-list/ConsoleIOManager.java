@@ -24,15 +24,22 @@ public class ConsoleIOManager {
     }
 
     public void handleInput(List<String> options) {
-        int input;
-        try {
-            input = Integer.parseInt(scanner.next());
-        } catch (NumberFormatException _) {
-            input = 0;
+        int input = 0;
+        while (!isInputValid(options, input)) {
+            try {
+                input = Integer.parseInt(scanner.next());
+            } catch (NumberFormatException _) {
+                input = 0;
+            }
+            if (!isInputValid(options, input)) {
+                showMessage(Constants.INCORRECT_INPUT_WARNING);
+            }
         }
-        if (input > 0 && input <= options.size()) {
-            this.choosenOption = options.get(input - 1);
-        }
+        this.choosenOption = options.get(input - 1);
+    }
+
+    private boolean isInputValid(List<String> options, int input) {
+        return input > 0 && input <= options.size();
     }
 
     public void showLines(List<String> lines) {
@@ -50,12 +57,11 @@ public class ConsoleIOManager {
     }
 
     public void clearScreen() {
-        // System.out.print("\033[H\033[2J");
-        // System.out.flush();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     public String getChoice() {
-        System.out.println(this.choosenOption);
         return this.choosenOption;
     }
 
