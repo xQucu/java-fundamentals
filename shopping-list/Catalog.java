@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 public class Catalog {
-    private HashMap<String, List<String>> products;
+    private HashMap<String, Category> categories;
 
     public Catalog(FileIOManager fm) throws IOException {
         List<String> lines = fm.readLines(Constants.INPUT_FILE_NAME);
-        this.products = new HashMap<>();
+        this.categories = new HashMap<>();
 
         // first line is ommited, because first line are headers
         for (int i = 1; i < lines.size(); i++) {
@@ -19,22 +19,26 @@ public class Catalog {
                 throw new IOException("Incorrect data format");
             }
 
-            String category = splitLine[0].trim();
-            String product = splitLine[1].trim();
-            products.computeIfAbsent(category, _ -> new ArrayList<>()).add(product);
+            String categoryName = splitLine[0].trim();
+            String productName = splitLine[1].trim();
+            Product product = new Product(productName);
+
+            Category category = categories.computeIfAbsent(categoryName, name -> new Category(name));
+
+            category.addProduct(product);
 
         }
 
     }
 
     public List<String> getCategories() {
-        Set<String> categories = this.products.keySet();
+        Set<String> categories = this.categories.keySet();
         return new ArrayList<>(categories);
 
     }
 
-    public List<String> getItemsFromCategory(String category) {
-        return this.products.getOrDefault(category, new ArrayList<>());
+    public Category getCategoryByName(String name) {
+        return this.categories.get(name);
     }
 
 }

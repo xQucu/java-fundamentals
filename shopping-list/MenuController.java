@@ -92,14 +92,14 @@ public class MenuController {
     }
 
     private void categoriesMenu(Catalog catalog, UserList userList, ConsoleIOManager ConsoleIOManager) {
-        List<String> menuItems = new ArrayList<>(catalog.getItemsFromCategory(this.currentState));
+        List<String> menuItems = new ArrayList<>(catalog.getCategoryByName(this.currentState).getProductNames());
         menuItems.add(Constants.GO_BACK_OPTION);
         ConsoleIOManager.displayMenu(Constants.ADD_PRODUCT_FINAL_MENU, menuItems);
         ConsoleIOManager.handleInput(menuItems);
         String newMenuName = ConsoleIOManager.getChoice();
         if (newMenuName.equals(Constants.GO_BACK_OPTION)) {
             this.currentState = Constants.MAIN_MENU_NAME;
-        } else if (catalog.getItemsFromCategory(this.currentState).contains(newMenuName)) {
+        } else if (catalog.getCategoryByName(this.currentState).getProductNames().contains(newMenuName)) {
             userList.addProduct(newMenuName);
             ConsoleIOManager.showDissapearingMessage(Constants.ON_ADD_MESSAGE);
         }
