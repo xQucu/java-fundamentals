@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserList {
-    private List<String> products;
+    private List<Product> products;
     private FileIOManager fm;
 
     public UserList(FileIOManager fm) {
@@ -12,18 +12,30 @@ public class UserList {
     }
 
     public void addProduct(String product) {
-        this.products.add(product);
+        this.products.add(new Product(product));
     }
 
-    public List<String> getList() {
-        return this.products;
+    public List<String> getListOfProducts() {
+        List<String> productNames = new ArrayList<>();
+        for (Product product : this.products) {
+            productNames.add(product.getName());
+        }
+        return productNames;
     }
 
-    public void removeProduct(String product) {
-        this.products.remove(product);
+    public void removeProduct(String productToRemove) {
+        for (int i = 0; i < products.size(); i++) {
+            Product product = products.get(i);
+            if (product.getName().equalsIgnoreCase(productToRemove)) {
+                products.remove(i);
+                System.out.println("Removed product: " + productToRemove);
+                return;
+            }
+        }
     }
 
     public void saveListToFile(String fileName) throws IOException {
-        this.fm.writeLines(Constants.OUTPUT_FILE_NAME, this.products);
+        this.fm.writeLines(Constants.OUTPUT_FILE_NAME, this.getListOfProducts());
     }
+
 }

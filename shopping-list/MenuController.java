@@ -60,6 +60,10 @@ public class MenuController {
         }
     }
 
+    private void setState(String state) {
+        this.currentState = state;
+    }
+
     private void quit(ConsoleIOManager ConsoleIOManager) {
         ConsoleIOManager.showMessage(Constants.GOODBYE_MESSAGE);
 
@@ -75,12 +79,12 @@ public class MenuController {
             ConsoleIOManager.showMessage(Constants.FAILED_LIST_SAVE);
         } finally {
             ConsoleIOManager.waitForAnyInputToContinue();
-            this.currentState = Constants.MAIN_MENU_NAME;
+            setState(Constants.MAIN_MENU_NAME);
         }
     }
 
     private void productListMenu(UserList userList, ConsoleIOManager ConsoleIOManager) {
-        List<String> productsList = userList.getList();
+        List<String> productsList = userList.getListOfProducts();
         ConsoleIOManager.clearScreen();
         if (productsList.size() > 0) {
             ConsoleIOManager.displayMenu(Constants.SHOW_LIST_MESSAGE, productsList);
@@ -88,7 +92,7 @@ public class MenuController {
             ConsoleIOManager.showMessage(Constants.EMPTY_SHOW_LIST_MESSAGE);
         }
         ConsoleIOManager.waitForAnyInputToContinue();
-        this.currentState = Constants.MAIN_MENU_NAME;
+        setState(Constants.MAIN_MENU_NAME);
     }
 
     private void categoriesMenu(Catalog catalog, UserList userList, ConsoleIOManager ConsoleIOManager) {
@@ -98,7 +102,7 @@ public class MenuController {
         ConsoleIOManager.handleInput(menuItems);
         String newMenuName = ConsoleIOManager.getChoice();
         if (newMenuName.equals(Constants.GO_BACK_OPTION)) {
-            this.currentState = Constants.MAIN_MENU_NAME;
+            setState(Constants.MAIN_MENU_NAME);
         } else if (catalog.getCategoryByName(this.currentState).getProductNames().contains(newMenuName)) {
             userList.addProduct(newMenuName);
             ConsoleIOManager.showDissapearingMessage(Constants.ON_ADD_MESSAGE);
@@ -106,22 +110,22 @@ public class MenuController {
     }
 
     private void removeProductMenu(UserList userList, ConsoleIOManager ConsoleIOManager) {
-        List<String> menuItems = new ArrayList<>(userList.getList());
+        List<String> menuItems = new ArrayList<>(userList.getListOfProducts());
         if (menuItems.size() > 0) {
             menuItems.add(Constants.GO_BACK_OPTION);
             ConsoleIOManager.displayMenu(Constants.REMOVE_ITEM_MENU, menuItems);
             ConsoleIOManager.handleInput(menuItems);
             String choice = ConsoleIOManager.getChoice();
             if (choice.equals(Constants.GO_BACK_OPTION)) {
-                this.currentState = Constants.MAIN_MENU_NAME;
-            } else if (userList.getList().contains(choice)) {
+                setState(Constants.MAIN_MENU_NAME);
+            } else if (userList.getListOfProducts().contains(choice)) {
                 userList.removeProduct(choice);
             }
         } else {
             ConsoleIOManager.clearScreen();
             ConsoleIOManager.showMessage(Constants.EMPTY_SHOW_LIST_MESSAGE);
             ConsoleIOManager.waitForAnyInputToContinue();
-            this.currentState = Constants.MAIN_MENU_NAME;
+            setState(Constants.MAIN_MENU_NAME);
         }
     }
 
@@ -132,16 +136,16 @@ public class MenuController {
         ConsoleIOManager.handleInput(menuItems);
         String newMenuName = ConsoleIOManager.getChoice();
         if (newMenuName.equals(Constants.GO_BACK_OPTION)) {
-            this.currentState = Constants.MAIN_MENU_NAME;
+            setState(Constants.MAIN_MENU_NAME);
         } else if (catalog.getCategories().contains(newMenuName)) {
-            this.currentState = newMenuName;
+            setState(newMenuName);
         }
     }
 
     private void mainMenu(ConsoleIOManager ConsoleIOManager) {
         ConsoleIOManager.displayMenu(Constants.MAIN_MENU_PROMPT, Constants.MAIN_MENU_OPTIONS);
         ConsoleIOManager.handleInput(Constants.MAIN_MENU_OPTIONS);
-        this.currentState = ConsoleIOManager.getChoice();
+        setState(ConsoleIOManager.getChoice());
     }
 
 }

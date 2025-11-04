@@ -11,8 +11,7 @@ public class Catalog {
         List<String> lines = fm.readLines(Constants.INPUT_FILE_NAME);
         this.categories = new HashMap<>();
 
-        // first line is ommited, because first line are headers
-        for (int i = 1; i < lines.size(); i++) {
+        for (int i = Constants.FIRST_LINE_TO_READ_FROM - 1; i < lines.size(); i++) {
             String line = lines.get(i);
             String[] splitLine = line.split(",");
             if (splitLine.length < 2) {

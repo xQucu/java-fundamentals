@@ -1,6 +1,7 @@
 import java.util.List;
 
 public class Constants {
+    public static final int FIRST_LINE_TO_READ_FROM = 2;
     public static final String INPUT_FILE_NAME = "data.txt";
     public static final String MAIN_MENU_PROMPT = "Choose action by entering corresponding number and clicking enter";
     public static final String MAIN_MENU_NAME = "Main Menu";
