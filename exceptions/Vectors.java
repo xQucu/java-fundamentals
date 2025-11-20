@@ -29,7 +29,7 @@ public class Vectors {
         int controlLength = vectors.get(0).getLength();
         for (Vector vector : vectors) {
             if (vector.getLength() != controlLength) {
-                throw new DifferentVectorsLengthsException(this.getVectorLengths());
+                throw new DifferentVectorsLengthsException("Vectors of different lengths", this.getVectorLengths());
             }
         }
     }

@@ -15,6 +15,7 @@ public class ExceptionApp {
                 iom.print("Adding vectors result in: " + resultingVector.toString());
                 areVectorsValid = true;
             } catch (DifferentVectorsLengthsException e) {
+                iom.print(e.getMessage());
                 iom.print("First vector is " + e.getLengths().get(0));
                 iom.print("Please try inputting vectors once again.");
             }
