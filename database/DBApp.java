@@ -1,22 +1,26 @@
+import java.io.IOException;
 
 public class DBApp {
     public static void main(String[] args) {
         IOmanager iom = new IOmanager();
-        Processor processor = new Processor();
         boolean running = true;
-        DB db = new DB(Consts.dbFileName);
+        DB db;
+        try {
+            db = new DB(Consts.dbFileName);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         System.out.println(Consts.greetMessage);
 
         while (running) {
             String input = iom.handleInput();
-            String action = "";
 
             try {
-                action = processor.getAction(input);
-                db.exec(input, action);
+                db.exec(input);
             } catch (IncorrectQuerySyntaxException e) {
                 System.out.println(e.getMessage());
-            } catch (TableExistsException e) {
+            } catch (TableException e) {
                 System.out.println(e.getMessage());
             }
 
