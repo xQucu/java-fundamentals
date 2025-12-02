@@ -6,22 +6,22 @@
         {
           "name": "id",
           "type": "INTEGER",
-          "primaryKey": true
+          true
         },
         {
           "name": "username",
           "type": "VARCHAR",
-          "primaryKey": false
+          false
         },
         {
           "name": "email",
           "type": "VARCHAR",
-          "primaryKey": false
+          false
         },
         {
           "name": "age",
           "type": "INTEGER",
-          "primaryKey": false
+          false
         }
       ],
       "rows": [
@@ -45,22 +45,22 @@
         {
           "name": "order_id",
           "type": "INTEGER",
-          "primaryKey": true
+          true
         },
         {
           "name": "user_id",
           "type": "INTEGER",
-          "primaryKey": false
+          false
         },
         {
           "name": "product",
           "type": "VARCHAR",
-          "primaryKey": false
+          false
         },
         {
           "name": "amount",
           "type": "DECIMAL",
-          "primaryKey": false
+          false
         }
       ],
       "rows": [

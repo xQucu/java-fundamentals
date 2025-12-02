@@ -37,21 +37,74 @@ public class DB {
         return statement;
     }
 
-    public void createTable(String statement) throws TableException {
-        // String tableName = statement.split(" ")[2];
-        // if (tableExists(tableName)) {
-        // throw new TableExistsException("Table name provided in query already
-        // exists.");
-        // }
-        // String[] columns = statement.split("[()]")[1].split(",");
+    public void createTable(String statement) throws TableException, IncorrectQuerySyntaxException {
+        String[] words = statement.split(" ");
+        String tableName = words[2].trim();
 
+        if (tableExists(tableName)) {
+            throw new TableException("Table already exists", statement);
+        }
+
+        int openParen = statement.indexOf("(");
+        int closeParen = statement.lastIndexOf(")");
+
+        if (openParen == -1 || closeParen == -1) {
+            throw new TableException("Invalid syntax", statement);
+        }
+
+        String columnsStr = statement.substring(openParen + 1, closeParen);
+        String[] columnDefs = columnsStr.split(",");
+
+        List<Column> columns = new ArrayList<>();
+
+        for (String colDef : columnDefs) {
+            String[] parts = colDef.trim().split(" ");
+
+            if (parts.length < 2) {
+                throw new TableException("Invalid column definition: " + colDef, statement);
+            }
+
+            String columnName = parts[0].trim();
+            String columnType = parts[1].trim();
+            columnType = setDataTypes(columnType);
+
+            columns.add(new Column(columnName, columnType));
+        }
+
+        Table newTable = new Table(tableName, columns);
+        schema.getTables().put(tableName, newTable);
+
+        try {
+            writeChangesToFile();
+            System.out.println("Table created.");
+        } catch (IOException e) {
+            throw new TableException("Failed to save table to file: " + e.getMessage());
+        }
     }
 
-    private void select(String statement) throws TableException {
+    private String setDataTypes(String columnType) throws IncorrectQuerySyntaxException {
+        if (columnType.equalsIgnoreCase("text")) {
+            columnType = "VARCHAR";
+        } else if (columnType.equalsIgnoreCase("int")) {
+            columnType = "INTEGER";
+        } else if (columnType.equalsIgnoreCase("varchar")) {
+            columnType = "VARCHAR";
+        } else if (columnType.equalsIgnoreCase("integer")) {
+            columnType = "INTEGER";
+        } else {
+            throw new IncorrectQuerySyntaxException("Incorrect type of data for column to be created");
+        }
+        return columnType;
+    }
+
+    private void select(String statement) throws TableException, IncorrectQuerySyntaxException {
         boolean hasJoin = statement.contains(" join ");
         String[] statementValues = statement.toLowerCase().split("select | from | join | on | where ");
 
         if (hasJoin) {
+            if (statementValues.length < 5) {
+                throw new IncorrectQuerySyntaxException("Incorrect syntax");
+            }
             String columns = statementValues[1].trim();
             String table1Name = statementValues[2].trim();
             String table2Name = statementValues[3].trim();
@@ -97,6 +150,9 @@ public class DB {
 
             IOmanager.displayResults(joinedRows, columnsToDisplay);
         } else {
+            if (statementValues.length < 3) {
+                throw new IncorrectQuerySyntaxException("Incorrect syntax");
+            }
             String columns = statementValues[1].trim();
             String tableName = statementValues[2].trim();
             if (!tableExists(tableName)) {
@@ -183,12 +239,12 @@ public class DB {
         String[] splitedInput = input.split(" ");
         String action = splitedInput[0].toLowerCase();
 
-        Set<String> validActions = Set.of("select", "insert", "update", "delete");
+        Set<String> validActions = Set.of("select", "insert", "update", "delete", "create");
         if (input.trim().length() == 0) {
             throw new IncorrectQuerySyntaxException("No query to execute");
         }
 
-        if (("create".equals(action) && !"table".equalsIgnoreCase(splitedInput[1]))
+        if (("create".equalsIgnoreCase(action) && !"table".equalsIgnoreCase(splitedInput[1]))
                 || !validActions.contains(action)) {
             throw new IncorrectQuerySyntaxException("Incorrect syntax near sql action.", input);
         }

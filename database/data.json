@@ -1,82 +1,75 @@
 {
-  "tables": {
-    "users": {
-      "name": "users",
-      "columns": [
-        {
-          "name": "id",
-          "type": "INTEGER",
-          "primaryKey": true
-        },
-        {
-          "name": "username",
-          "type": "VARCHAR",
-          "primaryKey": false
-        },
-        {
-          "name": "email",
-          "type": "VARCHAR",
-          "primaryKey": false
-        },
-        {
-          "name": "age",
-          "type": "INTEGER",
-          "primaryKey": false
-        }
-      ],
-      "rows": [
-        {
-          "id": 1,
-          "username": "john_doe",
-          "email": "john@example.com",
-          "age": 25
-        },
-        {
-          "id": 2,
-          "username": "jane_smith",
-          "email": "jane@example.com",
-          "age": 30
-        }
-      ]
+  "tables" : {
+    "users" : {
+      "name" : "users",
+      "columns" : [ {
+        "name" : "id",
+        "type" : "INTEGER"
+      }, {
+        "name" : "username",
+        "type" : "VARCHAR"
+      }, {
+        "name" : "email",
+        "type" : "VARCHAR"
+      }, {
+        "name" : "age",
+        "type" : "INTEGER"
+      } ],
+      "rows" : [ {
+        "id" : 1,
+        "username" : "john_doe",
+        "email" : "john@example.com",
+        "age" : 25
+      }, {
+        "id" : 2,
+        "username" : "jane_smith",
+        "email" : "jane@example.com",
+        "age" : 30
+      } ]
     },
-    "orders": {
-      "name": "orders",
-      "columns": [
-        {
-          "name": "order_id",
-          "type": "INTEGER",
-          "primaryKey": true
-        },
-        {
-          "name": "user_id",
-          "type": "INTEGER",
-          "primaryKey": false
-        },
-        {
-          "name": "product",
-          "type": "VARCHAR",
-          "primaryKey": false
-        },
-        {
-          "name": "amount",
-          "type": "DECIMAL",
-          "primaryKey": false
-        }
-      ],
-      "rows": [
-        {
-          "order_id": 101,
-          "user_id": 1,
-          "product": "Laptop",
-          "amount": 999.99
-        },
-        {
-          "order_id": 102,
-          "user_id": 2,
-          "product": "Mouse",
-          "amount": 25.5
-        }
-      ]
+    "orders" : {
+      "name" : "orders",
+      "columns" : [ {
+        "name" : "order_id",
+        "type" : "INTEGER"
+      }, {
+        "name" : "user_id",
+        "type" : "INTEGER"
+      }, {
+        "name" : "product",
+        "type" : "VARCHAR"
+      }, {
+        "name" : "amount",
+        "type" : "DECIMAL"
+      } ],
+      "rows" : [ {
+        "order_id" : 101,
+        "user_id" : 1,
+        "product" : "Laptop",
+        "amount" : 999.99
+      }, {
+        "order_id" : 102,
+        "user_id" : 2,
+        "product" : "Mouse",
+        "amount" : 25.5
+      } ]
+    },
+    "books" : {
+      "name" : "books",
+      "columns" : [ {
+        "name" : "id",
+        "type" : "INTEGER"
+      }, {
+        "name" : "title",
+        "type" : "VARCHAR"
+      }, {
+        "name" : "author",
+        "type" : "varchar"
+      }, {
+        "name" : "iban",
+        "type" : "integer"
+      } ],
+      "rows" : [ ]
     }
   }
 }

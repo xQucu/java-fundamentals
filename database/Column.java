@@ -1,7 +1,6 @@
 public class Column {
     private String name;
     private String type;
-    private String primaryKey;
 
     public Column() {
     }
@@ -25,14 +24,6 @@ public class Column {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getPrimaryKey() {
-        return primaryKey;
-    }
-
-    public void setPrimaryKey(String primaryKey) {
-        this.primaryKey = primaryKey;
     }
 
 }
