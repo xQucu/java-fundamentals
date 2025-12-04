@@ -32,20 +32,17 @@ public class IOmanager {
             return;
         }
 
-        // Print header
         System.out.println();
         for (String col : columns) {
             System.out.printf("%-20s", col);
         }
         System.out.println();
 
-        // Print separator
         for (String _ : columns) {
             System.out.print("--------------------");
         }
         System.out.println();
 
-        // Print rows
         for (Map<String, Object> row : rows) {
             for (String col : columns) {
                 Object value = row.get(col);

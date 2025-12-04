@@ -19,13 +19,12 @@ public class DB {
 
         statement = statement.toLowerCase();
         statement = removeTrailingSemicolon(statement);
-        String[] splitStatement = statement.toLowerCase().split(" ");
         switch (action.toLowerCase()) {
             case "create" -> createTable(statement);
             case "select" -> select(statement);
-            case "insert" -> insert(splitStatement);
-            case "update" -> update(splitStatement);
-            case "delete" -> delete(splitStatement);
+            case "insert" -> insert(statement);
+            case "update" -> update(statement);
+            case "delete" -> delete(statement);
             default -> throw new IncorrectQuerySyntaxException("Incorrect syntax near action: " + action);
         }
     }
@@ -109,6 +108,7 @@ public class DB {
             String table1Name = statementValues[2].trim();
             String table2Name = statementValues[3].trim();
             String onCondition = statementValues[4].trim();
+            String whereCondition = statementValues.length > 5 ? statementValues[5].trim() : "";
 
             if (!tableExists(table1Name) || !tableExists(table2Name)) {
                 throw new TableException("One of the tables does not exist", statement);
@@ -133,6 +133,16 @@ public class DB {
                     leftTable, leftColumn,
                     rightTable, rightColumn);
 
+            if (!whereCondition.isEmpty()) {
+                List<Map<String, Object>> filteredRows = new ArrayList<>();
+                for (Map<String, Object> row : joinedRows) {
+                    if (evaluateWhereConditionForJoin(row, whereCondition, table1Name, table2Name)) {
+                        filteredRows.add(row);
+                    }
+                }
+                joinedRows = filteredRows;
+            }
+
             List<String> columnsToDisplay = new ArrayList<>();
             if (columns.equals("*")) {
                 for (Column col : table1.getColumns()) {
@@ -155,12 +165,24 @@ public class DB {
             }
             String columns = statementValues[1].trim();
             String tableName = statementValues[2].trim();
+            String whereCondition = statementValues.length > 3 ? statementValues[3].trim() : "";
+
             if (!tableExists(tableName)) {
                 throw new TableException("Table does not exist", statement);
             }
 
             Table table = schema.getTables().get(tableName);
             List<Map<String, Object>> rows = table.getRows();
+
+            if (!whereCondition.isEmpty()) {
+                List<Map<String, Object>> filteredRows = new ArrayList<>();
+                for (Map<String, Object> row : rows) {
+                    if (evaluateWhereCondition(row, whereCondition)) {
+                        filteredRows.add(row);
+                    }
+                }
+                rows = filteredRows;
+            }
 
             List<String> columnsToDisplay = new ArrayList<>();
             if (columns.equals("*")) {
@@ -180,6 +202,79 @@ public class DB {
             IOmanager.displayResults(rows, columnsToDisplay);
         }
 
+    }
+
+    private boolean evaluateWhereCondition(Map<String, Object> row, String whereCondition) {
+        if (whereCondition == null || whereCondition.isEmpty()) {
+            return true;
+        }
+
+        String[] conditionParts = whereCondition.split("=");
+        if (conditionParts.length != 2) {
+            return false;
+        }
+
+        String columnName = conditionParts[0].trim();
+        String value = conditionParts[1].trim();
+
+        if (value.startsWith("'") && value.endsWith("'")) {
+            value = value.substring(1, value.length() - 1);
+        }
+
+        Object rowValue = row.get(columnName);
+        if (rowValue == null) {
+            return false;
+        }
+
+        if (rowValue instanceof Integer) {
+            try {
+                int intValue = Integer.parseInt(value);
+                return rowValue.equals(intValue);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        } else {
+            return rowValue.toString().equals(value);
+        }
+    }
+
+    private boolean evaluateWhereConditionForJoin(Map<String, Object> row, String whereCondition,
+            String table1Name, String table2Name) {
+        if (whereCondition == null || whereCondition.isEmpty()) {
+            return true;
+        }
+
+        String[] conditionParts = whereCondition.split("=");
+        if (conditionParts.length != 2) {
+            return false;
+        }
+
+        String columnName = conditionParts[0].trim();
+        String value = conditionParts[1].trim();
+
+        if (!columnName.contains(".")) {
+            return false;
+        }
+
+        if (value.startsWith("'") && value.endsWith("'")) {
+            value = value.substring(1, value.length() - 1);
+        }
+
+        Object rowValue = row.get(columnName);
+        if (rowValue == null) {
+            return false;
+        }
+
+        if (rowValue instanceof Integer) {
+            try {
+                int intValue = Integer.parseInt(value);
+                return rowValue.equals(intValue);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        } else {
+            return rowValue.toString().equals(value);
+        }
     }
 
     private List<Map<String, Object>> performJoin(
@@ -213,13 +308,13 @@ public class DB {
         return result;
     }
 
-    private void insert(String[] splitStatement) {
+    private void insert(String splitStatement) {
     }
 
-    private void update(String[] splitStatement) {
+    private void update(String splitStatement) {
     }
 
-    private void delete(String[] splitStatement) {
+    private void delete(String splitStatement) {
     }
 
     private boolean tableExists(String tableName) {
@@ -232,7 +327,6 @@ public class DB {
 
     private void writeChangesToFile() throws IOException {
         FileManager.saveDatabase(databaseFileName, schema);
-
     }
 
     private String getAction(String input) throws IncorrectQuerySyntaxException {
