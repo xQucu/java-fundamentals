@@ -234,7 +234,7 @@ public class DB {
                 return false;
             }
         } else {
-            return rowValue.toString().equals(value);
+            return rowValue.toString().equalsIgnoreCase(value);
         }
     }
 
@@ -273,7 +273,7 @@ public class DB {
                 return false;
             }
         } else {
-            return rowValue.toString().equals(value);
+            return rowValue.toString().equalsIgnoreCase(value);
         }
     }
 
