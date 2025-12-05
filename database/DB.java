@@ -1,13 +1,11 @@
 import java.io.IOException;
 
 public class DB {
-    private String databaseFileName;
     private DatabaseSchema schema;
     private QueryParser parser;
     private QueryExecutor executor;
 
     public DB(String databaseFileName) throws IOException {
-        this.databaseFileName = databaseFileName;
         this.schema = FileManager.loadDatabase(databaseFileName);
         this.parser = new QueryParser();
         this.executor = new QueryExecutor(schema, databaseFileName);

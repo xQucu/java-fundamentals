@@ -1,6 +1,4 @@
 public class QueryExecutor {
-    private DatabaseSchema schema;
-    private String databaseFileName;
     private CreateTableHandler createHandler;
     private SelectHandler selectHandler;
     private InsertHandler insertHandler;
@@ -8,8 +6,6 @@ public class QueryExecutor {
     private DeleteHandler deleteHandler;
 
     public QueryExecutor(DatabaseSchema schema, String databaseFileName) {
-        this.schema = schema;
-        this.databaseFileName = databaseFileName;
         this.createHandler = new CreateTableHandler(schema, databaseFileName);
         this.selectHandler = new SelectHandler(schema);
         this.insertHandler = new InsertHandler(schema, databaseFileName);
