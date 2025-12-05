@@ -52,6 +52,14 @@
         "user_id" : 2,
         "product" : "Mouse",
         "amount" : 25.5
+      }, {
+        "user_id" : 3,
+        "order_id" : 103
+      }, {
+        "product" : "keyboard",
+        "amount" : "100",
+        "user_id" : 4,
+        "order_id" : 104
       } ]
     },
     "books" : {
