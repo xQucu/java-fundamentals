@@ -51,7 +51,5 @@ public class IOmanager {
             }
             System.out.println();
         }
-
-        System.out.println("\n" + rows.size() + " row(s) returned.");
     }
 }

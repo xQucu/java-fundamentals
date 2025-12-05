@@ -15,4 +15,8 @@ public class DatabaseSchema {
     public void setTables(Map<String, Table> tables) {
         this.tables = tables;
     }
+
+    public boolean tableExists(String tableName) {
+        return this.getTables().containsKey(tableName);
+    }
 }
