@@ -40,4 +40,13 @@ public class Table {
     public void setRows(List<Map<String, Object>> rows) {
         this.rows = rows;
     }
+
+    public Column getColumnByName(String columnName) {
+        for (Column col : columns) {
+            if (col.getName().equalsIgnoreCase(columnName)) {
+                return col;
+            }
+        }
+        return null;
+    }
 }

@@ -311,7 +311,69 @@ public class DB {
     private void insert(String statement) {
     }
 
-    private void update(String statement) {
+    private void update(String statement) throws TableException, IncorrectQuerySyntaxException {
+        String[] parts = statement.toLowerCase().split(" set ");
+        if (parts.length != 2) {
+            throw new IncorrectQuerySyntaxException("Invalid UPDATE syntax");
+        }
+
+        String tableName = parts[0].replaceFirst("update", "").trim();
+
+        if (!tableExists(tableName)) {
+            throw new TableException("Table does not exist");
+        }
+
+        Table table = schema.getTables().get(tableName);
+
+        String setPart = parts[1];
+        String wherePart = "";
+        if (setPart.contains(" where ")) {
+            wherePart = setPart.split(" where ")[1].trim();
+            setPart = setPart.split(" where ")[0].trim();
+        }
+
+        String[] assignments = setPart.split(",");
+        Map<String, String> updates = new HashMap<>();
+        for (String assign : assignments) {
+            String[] keyValue = assign.split("=");
+            if (keyValue.length != 2) {
+                throw new IncorrectQuerySyntaxException("Invalid SET syntax in UPDATE statement");
+            }
+            updates.put(keyValue[0].trim(), keyValue[1].trim());
+        }
+
+        List<Map<String, Object>> rows = table.getRows();
+        for (Map<String, Object> row : rows) {
+            if (wherePart.isEmpty() || evaluateWhereCondition(row, wherePart)) {
+                for (Map.Entry<String, String> entry : updates.entrySet()) {
+                    Column col = table.getColumnByName(entry.getKey());
+                    if (col == null) {
+                        throw new TableException("Column " + entry.getKey() + " does not exist in table " + tableName);
+                    }
+                    String value = entry.getValue();
+                    if (col.getType().equals("INTEGER")) {
+                        try {
+                            row.put(col.getName(), Integer.parseInt(value));
+                        } catch (NumberFormatException e) {
+                            throw new IncorrectQuerySyntaxException(
+                                    "Invalid integer value for column " + col.getName());
+                        }
+                    } else {
+                        if (value.startsWith("'") && value.endsWith("'")) {
+                            value = value.substring(1, value.length() - 1);
+                        }
+                        row.put(col.getName(), value);
+                    }
+                }
+            }
+        }
+
+        try {
+            writeChangesToFile();
+            System.out.println("Rows updated.");
+        } catch (IOException e) {
+            throw new TableException("Failed to save changes to file: " + e.getMessage());
+        }
     }
 
     private void delete(String statement) throws TableException, IncorrectQuerySyntaxException {
@@ -324,7 +386,7 @@ public class DB {
         String wherePart = parts[1].contains(" where ") ? parts[1].split(" where ")[1].trim() : "";
 
         if (!tableExists(tableName)) {
-            throw new TableException("Table does not exist", statement);
+            throw new TableException("Table does not exist");
         }
 
         Table table = schema.getTables().get(tableName);
@@ -343,7 +405,7 @@ public class DB {
             writeChangesToFile();
             System.out.println("Rows deleted.");
         } catch (IOException e) {
-            throw new TableException("Failed to save changes to file: " + e.getMessage());
+            throw new TableException("Failed to save changes to file: ");
         }
     }
 
